@@ -1,0 +1,1 @@
+export const secToMilliSec = (sec: number): number => sec * 1000;
