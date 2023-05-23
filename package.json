@@ -1,0 +1,10 @@
+{
+  "name": "rollup-date-time-utils",
+  "version": "1.0.0",
+  "description": "A testing date-time utility library.",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
