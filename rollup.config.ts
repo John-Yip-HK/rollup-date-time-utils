@@ -3,7 +3,6 @@ import commonjs from "@rollup/plugin-commonjs";
 import typescript, {
 	type RollupTypescriptOptions,
 } from "@rollup/plugin-typescript";
-// import terser from "@rollup/plugin-terser";
 import dts from "rollup-plugin-dts";
 
 import type { RollupOptions } from "rollup";
@@ -12,11 +11,26 @@ import packageJson from "./package.json" assert { type: "json" };
 
 const commonBundleConfigs = {
 	input: ["src/index.ts", "src/libs/index.ts"],
-	plugins: [
-		resolve(),
-		commonjs(),
-		// terser()
-	],
+	output: {
+		sourcemap: true,
+		entryFileNames({ facadeModuleId }) {
+			const splitModuleId = facadeModuleId?.split("\\") ?? [""];
+			const idxOfSrcString = splitModuleId.indexOf("src");
+
+			if (
+				splitModuleId.length === 1 ||
+				idxOfSrcString === -1 ||
+				idxOfSrcString === splitModuleId.length - 2
+			) {
+				return "[name].js";
+			}
+
+			return `${splitModuleId
+				.slice(idxOfSrcString + 1, splitModuleId.length - 1)
+				.join("/")}/index.js`;
+		},
+	},
+	plugins: [resolve(), commonjs()],
 } satisfies RollupOptions;
 
 const commonTsConfig = {
@@ -29,9 +43,9 @@ export default [
 	{
 		...commonBundleConfigs,
 		output: {
+			...commonBundleConfigs.output,
 			dir: packageJson.main.split("/").slice(0, -1).join("/"),
 			format: "cjs",
-			sourcemap: true,
 		},
 		plugins: commonBundleConfigs.plugins.concat([
 			typescript({
@@ -43,9 +57,9 @@ export default [
 	{
 		...commonBundleConfigs,
 		output: {
+			...commonBundleConfigs.output,
 			dir: packageJson.module.split("/").slice(0, -1).join("/"),
 			format: "esm",
-			sourcemap: true,
 		},
 		plugins: commonBundleConfigs.plugins.concat([
 			typescript({
