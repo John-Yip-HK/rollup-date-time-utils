@@ -9,7 +9,7 @@
 		"dist"
 	],
 	"scripts": {
-		"build": "rm -rf dist && rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
+		"build": "rm -rf dist && rollup -c --bundleConfigAsCjs",
 		"postbuild": "node ./scripts/frankBuild.js"
 	},
 	"keywords": [],
@@ -19,13 +19,13 @@
 		"@rollup/plugin-commonjs": "^25.0.0",
 		"@rollup/plugin-node-resolve": "^15.0.2",
 		"@rollup/plugin-terser": "^0.4.3",
-		"@rollup/plugin-typescript": "^11.1.1",
 		"@types/node": "^20.2.3",
 		"@types/rollup-plugin-generate-package-json": "^3.2.0",
 		"fs-extra": "^11.1.1",
 		"rollup": "^3.23.0",
 		"rollup-plugin-dts": "^5.3.0",
 		"rollup-plugin-generate-package-json": "^3.2.0",
+		"rollup-plugin-typescript2": "^0.34.1",
 		"tslib": "^2.5.2",
 		"typescript": "^5.0.4"
 	}

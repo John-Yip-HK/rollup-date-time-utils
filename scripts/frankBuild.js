@@ -17,7 +17,7 @@ async function createPackageFile() {
 	const newPackageData = {
 		...packageOthers,
 		private: false,
-		typings: "./index.d.ts",
+		types: "./index.d.ts",
 		main: "./cjs/index.js",
 		module: "./index.js",
 	};

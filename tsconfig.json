@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		/* Visit https://aka.ms/tsconfig to read more about this file */
-		"rootDir": ".",
+		"rootDir": "src",
 
 		"target": "ES2020",
 		"module": "ESNext",
@@ -20,5 +20,5 @@
 
 		"resolveJsonModule": true
 	},
-	"include": ["src/**/*", "rollup.config.ts"]
+	"include": ["src/**/*"]
 }

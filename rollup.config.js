@@ -1,9 +1,8 @@
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import typescript from "@rollup/plugin-typescript";
+import typescript from "rollup-plugin-typescript2";
 import terser from "@rollup/plugin-terser";
 import generatePackageJson from "rollup-plugin-generate-package-json";
-import { type InputPluginOption, type RollupOptions } from "rollup";
 
 import packageJson from "./package.json" assert { type: "json" };
 import { getFolders } from "./scripts/buildUtils";
@@ -12,13 +11,13 @@ const plugins = [
 	resolve(),
 	commonjs(),
 	typescript({
-		rootDir: "src",
 		tsconfig: "./tsconfig.json",
+		useTsconfigDeclarationDir: true,
 	}),
 	terser(),
-] satisfies InputPluginOption;
+];
 
-const subfolderPlugins = (folderName: string) => [
+const subfolderPlugins = (folderName) => [
 	...plugins,
 	generatePackageJson({
 		baseContents: {
@@ -41,7 +40,7 @@ const folderBuilds = getFolders("./src").map((folder) => {
 			format: "esm",
 		},
 		plugins: subfolderPlugins(folder),
-	} satisfies RollupOptions;
+	};
 });
 
 export default [
@@ -64,4 +63,4 @@ export default [
 		plugins,
 	},
 	...folderBuilds,
-] satisfies RollupOptions[];
+];
