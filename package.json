@@ -1,9 +1,10 @@
 {
 	"name": "rollup-date-time-utils",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "A testing date-time utility library.",
 	"main": "dist/cjs/index.js",
 	"module": "dist/esm/index.js",
+	"types": "dist/index.d.ts",
 	"files": [
 		"dist"
 	],
