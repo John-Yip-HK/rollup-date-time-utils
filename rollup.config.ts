@@ -1,76 +1,67 @@
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import typescript, {
-	type RollupTypescriptOptions,
-} from "@rollup/plugin-typescript";
-import dts from "rollup-plugin-dts";
-
-import type { RollupOptions } from "rollup";
+import typescript from "@rollup/plugin-typescript";
+import terser from "@rollup/plugin-terser";
+import generatePackageJson from "rollup-plugin-generate-package-json";
+import { type InputPluginOption, type RollupOptions } from "rollup";
 
 import packageJson from "./package.json" assert { type: "json" };
+import { getFolders } from "./scripts/buildUtils";
 
-const commonBundleConfigs = {
-	input: ["src/index.ts", "src/libs/index.ts"],
-	output: {
-		sourcemap: true,
-		entryFileNames({ facadeModuleId }) {
-			const splitModuleId = facadeModuleId?.split("\\") ?? [""];
-			const idxOfSrcString = splitModuleId.indexOf("src");
+const plugins = [
+	resolve(),
+	commonjs(),
+	typescript({
+		rootDir: "src",
+		tsconfig: "./tsconfig.json",
+	}),
+	terser(),
+] satisfies InputPluginOption;
 
-			if (
-				splitModuleId.length === 1 ||
-				idxOfSrcString === -1 ||
-				idxOfSrcString === splitModuleId.length - 2
-			) {
-				return "[name].js";
-			}
-
-			return `${splitModuleId
-				.slice(idxOfSrcString + 1, splitModuleId.length - 1)
-				.join("/")}/index.js`;
+const subfolderPlugins = (folderName: string) => [
+	...plugins,
+	generatePackageJson({
+		baseContents: {
+			name: `${packageJson.name}/${folderName}`,
+			private: true,
+			main: "../cjs/index.js", // --> points to cjs format entry point of whole library
+			module: "./index.js", // --> points to esm format entry point of individual component
+			types: "./index.d.ts", // --> points to types definition file of individual component
 		},
-	},
-	plugins: [resolve(), commonjs()],
-} satisfies RollupOptions;
+	}),
+];
 
-const commonTsConfig = {
-	tsconfig: "./tsconfig.json",
-	exclude: ["rollup.config.ts"],
-	rootDir: "src",
-} satisfies RollupTypescriptOptions;
+const folderBuilds = getFolders("./src").map((folder) => {
+	return {
+		input: `src/${folder}/index.ts`,
+		output: {
+			file: `dist/${folder}/index.js`,
+			sourcemap: true,
+			exports: "named",
+			format: "esm",
+		},
+		plugins: subfolderPlugins(folder),
+	} satisfies RollupOptions;
+});
 
 export default [
 	{
-		...commonBundleConfigs,
-		output: {
-			...commonBundleConfigs.output,
-			dir: packageJson.main.split("/").slice(0, -1).join("/"),
-			format: "cjs",
-		},
-		plugins: commonBundleConfigs.plugins.concat([
-			typescript({
-				...commonTsConfig,
-				declarationDir: "dist/cjs/types/",
-			}),
-		]),
+		input: ["src/index.ts"],
+		output: [
+			{
+				file: packageJson.module,
+				format: "esm",
+				sourcemap: true,
+				exports: "named",
+			},
+			{
+				file: packageJson.main,
+				format: "cjs",
+				sourcemap: true,
+				exports: "named",
+			},
+		],
+		plugins,
 	},
-	{
-		...commonBundleConfigs,
-		output: {
-			...commonBundleConfigs.output,
-			dir: packageJson.module.split("/").slice(0, -1).join("/"),
-			format: "esm",
-		},
-		plugins: commonBundleConfigs.plugins.concat([
-			typescript({
-				...commonTsConfig,
-				declarationDir: "dist/esm/types/",
-			}),
-		]),
-	},
-	{
-		input: "dist/esm/types/index.d.ts",
-		output: [{ file: "dist/index.d.ts", format: "es" }],
-		plugins: [dts()],
-	},
+	...folderBuilds,
 ] satisfies RollupOptions[];

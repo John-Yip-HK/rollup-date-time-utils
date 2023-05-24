@@ -11,9 +11,10 @@
 		"strict": true,
 		"skipLibCheck": true,
 
+		"lib": ["ESNext"],
+
 		"declaration": true,
-		"emitDeclarationOnly": true,
-		"declarationDir": "dist/types",
+		"declarationDir": "dist",
 		"sourceMap": true,
 		"allowSyntheticDefaultImports": true,
 
