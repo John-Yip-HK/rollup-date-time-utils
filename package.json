@@ -7,7 +7,8 @@
 	"types": "dist/index.d.ts",
 	"scripts": {
 		"build": "rm -rf dist && rollup -c --bundleConfigAsCjs",
-		"postbuild": "node ./scripts/frankBuild.js"
+		"postbuild": "node ./scripts/frankBuild.js",
+		"build:publish": "pnpm build && pnpm version patch && pnpm publish ./dist --dry-run"
 	},
 	"keywords": [],
 	"author": "",
