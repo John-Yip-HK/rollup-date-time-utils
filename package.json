@@ -1,6 +1,6 @@
 {
-	"name": "rollup-date-time-utils",
-	"version": "1.0.7",
+	"name": "test-date-time-utils",
+	"version": "0.0.1",
 	"description": "A testing date-time utility library.",
 	"main": "dist/cjs/index.js",
 	"module": "dist/index.js",
@@ -8,7 +8,11 @@
 	"scripts": {
 		"build": "rm -rf dist && rollup -c --bundleConfigAsCjs",
 		"postbuild": "node ./scripts/frankBuild.js",
-		"build:publish": "pnpm build && pnpm version patch && pnpm publish ./dist"
+		"build:publish": "pnpm build && pnpm publish ./dist"
+	},
+	"repository": {
+		"type": "git",
+		"directory": "https://github.com/John-Yip-HK/test-date-time-utils"
 	},
 	"keywords": [],
 	"author": "",
