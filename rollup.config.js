@@ -26,6 +26,7 @@ const subfolderPlugins = (folderName) => [
 			main: "../cjs/index.js", // --> points to cjs format entry point of whole library
 			module: "./index.js", // --> points to esm format entry point of individual component
 			types: "./index.d.ts", // --> points to types definition file of individual component
+			type: "module", // --> For successful import in ES Modules
 		},
 	}),
 ];

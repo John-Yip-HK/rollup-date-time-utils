@@ -8,7 +8,7 @@
 	"scripts": {
 		"build": "rm -rf dist && rollup -c --bundleConfigAsCjs",
 		"postbuild": "node ./scripts/frankBuild.js",
-		"build:publish": "pnpm build && pnpm version patch && pnpm publish ./dist --dry-run"
+		"build:publish": "pnpm build && pnpm version patch && pnpm publish ./dist"
 	},
 	"keywords": [],
 	"author": "",
