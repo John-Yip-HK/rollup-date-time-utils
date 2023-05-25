@@ -1,6 +1,6 @@
 {
 	"name": "rollup-date-time-utils",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"description": "A testing date-time utility library.",
 	"main": "dist/cjs/index.js",
 	"module": "dist/index.js",
