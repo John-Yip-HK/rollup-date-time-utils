@@ -5,9 +5,6 @@
 	"main": "dist/cjs/index.js",
 	"module": "dist/index.js",
 	"types": "dist/index.d.ts",
-	"files": [
-		"dist"
-	],
 	"scripts": {
 		"build": "rm -rf dist && rollup -c --bundleConfigAsCjs",
 		"postbuild": "node ./scripts/frankBuild.js"
